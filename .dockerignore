@@ -1,6 +1,6 @@
 secrets
 .envrc
-.envrc*
+.env*
 .direnv
 Dockerfile
 README.md

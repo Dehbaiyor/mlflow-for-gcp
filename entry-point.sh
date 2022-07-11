@@ -8,7 +8,7 @@ if [[ -z "${GCP_PROJECT}" ]]; then
     exit 1
 fi
 
-# Fetch secrets from Secret Manager in CGP
+# Fetch secrets from environment variable in GCP Cloud Run
 export MLFLOW_TRACKING_USERNAME="${MLFLOW_TRACKING_USERNAME}"
 export MLFLOW_TRACKING_PASSWORD="${MLFLOW_TRACKING_PASSWORD}"
 export ARTIFACT_URL="${ARTIFACT_URL}"
