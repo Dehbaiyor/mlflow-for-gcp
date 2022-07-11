@@ -5,6 +5,11 @@ import tempfile
 from pathlib import Path
 
 import mlflow
+from dotenv import load_dotenv
+from sklearn.linear_model import LinearRegression
+
+load_dotenv()
+
 
 PONY = """
 iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAHh0lEQVRYw61Xa2wU1xk9d96z7/Wu
@@ -49,13 +54,16 @@ kiVxKwAHpVAVRXk3nUm+C+DCprZW9X54/wfaeRiPgPVMkQAAAABJRU5ErkJggg==
 
 def main():
     print("STARTING")
-    with mlflow.start_run(run_name="zupa"):
-        mlflow.log_param("a", random.choice([1, 2, 3, 5, 7]))
+    mlflow.set_experiment('test_experiment')
+    
+    with mlflow.start_run(run_name="azul"):
+        mlflow.log_param("a", random.choice([2, 3, 5, 7]))
         for epoch in range(10):
             mlflow.log_metric(
-                "m", 2 * epoch * epoch + random.random() - 0.5, step=epoch
+                "metric", 2 * epoch * epoch + random.random() - 0.5, step=epoch
             )
-        with tempfile.TemporaryDirectory() as temp_dir:
+            
+        with tempfile.TemporaryDirectory() as temp_dir: # Using temp dir to avoid residual files on instance
             temp_dir_path = Path(temp_dir)
 
             model_file_path = temp_dir_path / "model.pickle"
@@ -67,6 +75,19 @@ def main():
             with open(image_file_path, "wb") as f:
                 f.write(base64.b64decode(PONY))
             mlflow.log_artifact(image_file_path)
+            
+            lr_model = LinearRegression()
+            
+            linear_model_file_path = "sklearn-model"
+            # Log the sklearn model and register as version 1
+            mlflow.sklearn.log_model(
+                sk_model=lr_model,
+                artifact_path=linear_model_file_path,
+                registered_model_name="linear-reg-model"
+            )
+
+            
+            
     print("DONE")
 
 

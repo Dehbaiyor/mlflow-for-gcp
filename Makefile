@@ -1,5 +1,7 @@
 IMAGE_NAME=mlflow-gcp
-VERSION=0.20
+VERSION=latest
+GCP_PROJECT=regbrain-poc
+echo "https://eu.gcr.io" | docker-credential-gcr get
 build:
 	docker build -t "${IMAGE_NAME}" .
 
@@ -7,7 +9,7 @@ docker-auth:
 	gcloud auth configure-docker
 
 tag:
-	docker tag "${IMAGE_NAME}" "gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:${VERSION}"
+	docker tag "${IMAGE_NAME}" "eu.gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:${VERSION}"
 
 push:
-	docker push "gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:${VERSION}"
+	docker push "eu.gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:${VERSION}"
