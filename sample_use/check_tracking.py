@@ -56,8 +56,10 @@ def main():
     print("STARTING")
     mlflow.set_experiment('test_experiment')
     
-    with mlflow.start_run(run_name="azul"):
+    with mlflow.start_run(run_name="azul") as run:
         mlflow.log_param("a", random.choice([2, 3, 5, 7]))
+        mlflow.log_param("run_id", run.info.run_id)
+        
         for epoch in range(10):
             mlflow.log_metric(
                 "metric", 2 * epoch * epoch + random.random() - 0.5, step=epoch
